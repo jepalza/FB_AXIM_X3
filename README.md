@@ -9,7 +9,7 @@ https://github.com/uARM-Palm/uARM
 
 Quedan cosas por reparar y sobre todo, por optimizar. Aún va muy lento,pero no mucho mas que el original, escrito en C.
 El Original requiere de aproximadamente 30seg. para su inicio completo, mientras que esta versión FreeBasic necesita 90seg.
-Probado en un I7 3.4ghz, mientras que en un I5 2.1ghz se hace inviable, debido a que tarda casi 10min en iniciarse.
+Probado en un I7 3.4ghz, mientras que en un I5 2.1ghz se hace inviable, debido a que tarda casi 50min en iniciarse.
 
 Debe necesariamente compilarse en modo 64bits, por el uso al empleo de "LongInt" en muchas operaciones.
 Ademas, es "obligatorio" emplear el parámetro "-gen gcc" de Frebasic al compilar, para emplear únicamente el modo GCC , y no el modo GAS.
