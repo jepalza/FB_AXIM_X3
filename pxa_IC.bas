@@ -67,7 +67,7 @@ Function socIcPrvMemAccessF( userData As any Ptr , pa As uLong , size As Ubyte ,
 	dim as uLong valor = 0 
 	
 	if (size <> 4) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write_" , "read_"), size, pa) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return false 
 	EndIf
   

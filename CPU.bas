@@ -752,7 +752,7 @@ ins_=instr_ ' PARA MIS TRAMPAS, BORRAR AL ACABAR JUNTO A SU DIM ARRIBA
 				case 5,7 
 					'PLD
 					if ((instr_ And &h0D70F000UL) = &h0550F000UL) Then Exit Sub ' instruccion OK, salimos
-					print "puta mierda 1 " : goto invalid_instr
+					print "GOTO invalid_instr 1 " : goto invalid_instr
 				
 				case 10,11 
 					goto b_bl_blx 
@@ -764,7 +764,7 @@ ins_=instr_ ' PARA MIS TRAMPAS, BORRAR AL ACABAR JUNTO A SU DIM ARRIBA
 					goto coproc_dp 
 				
 				case else 
-					print "puta mierda 2 " : goto invalid_instr
+					print "GOTO invalid_instr 2 " : goto invalid_instr
 			
 			End Select
    End Select
@@ -808,7 +808,7 @@ ins_=instr_ ' PARA MIS TRAMPAS, BORRAR AL ACABAR JUNTO A SU DIM ARRIBA
 								cpuPrvSetRegNotPC(cpu, (instr_ Shr 12) And &h0F, op1) 
 
 							case else 
-								print "puta mierda3" : goto invalid_instr 
+								print "GOTO invalid_instr 3" : goto invalid_instr 
 						End Select
 
 					else
@@ -816,7 +816,7 @@ ins_=instr_ ' PARA MIS TRAMPAS, BORRAR AL ACABAR JUNTO A SU DIM ARRIBA
 						Select Case As Const ((instr_ Shr 20) And &h0F) 'multiplies
 							case 0,1 'MUL
 								res = 0 
-								if (instr_ And &h0000F000UL) Then print "puta mierda4" : goto invalid_instr
+								if (instr_ And &h0000F000UL) Then print "GOTO invalid_instr 4" : goto invalid_instr
 								goto mul32 
 							
 							case 2,3 'MLA
@@ -863,7 +863,7 @@ mul64:
 								EndIf
 							
 							case else 
-								print "puta mierda5" : goto invalid_instr 
+								print "GOTO invalid_instr 5" : goto invalid_instr 
 
 					   End Select
 					endif
@@ -923,7 +923,7 @@ mul64:
 								EndIf
 								
 							case ARM_MODE_3_SH , ARM_MODE_3_SB 
-								print "puta mierda6" : goto invalid_instr 
+								print "GOTO invalid_instr 6" : goto invalid_instr 
 								
 							case ARM_MODE_3_D 
 								doubleMem(0) = cpuPrvGetRegNotPC(cpu, ((instr_ Shr 12) And &h0F) + 0, wasT, specialPC) 
@@ -955,7 +955,7 @@ mul64:
 						ElseIf ((instr_ And &h00B0FFF0UL) = &h0020F000UL) Then 'move reg to PSR
 							cpuPrvSetPSR(cpu, (instr_ Shr 16) And &h0F, privileged, NOT_NOT(instr_ And &h00400000UL), cpuPrvGetReg(cpu, instr_ And &h0F, wasT, specialPC)) 
 						else
-							print "puta mierda7" : goto invalid_instr
+							print "GOTO invalid_instr 7" : goto invalid_instr
 						EndIf
 						Exit Sub ' instruccion OK, salimos 
 				
@@ -964,7 +964,7 @@ mul64:
 						if (instr_ And &h00400000UL) Then  'CLZ
 							cpuPrvSetRegNotPC(cpu, (instr_ Shr 12) And &h0F, cpuPrvClz(cpuPrvGetRegNotPC(cpu, instr_ And &hF, wasT, specialPC))) 
 						else 'BL \ BLX \ BXJ
-							if ((instr_ And &h0FFFFF00UL) <> &h012FFF00UL) Then  print "puta mierda8" : goto invalid_instr
+							if ((instr_ And &h0FFFFF00UL) <> &h012FFF00UL) Then  print "GOTO invalid_instr 8" : goto invalid_instr
 							if ((instr_ And &h00000030UL) =  &h00000030UL) Then 
 								cpuPrvSetRegNotPC(cpu, REG_NO_LR, cpu->curInstrPC + iif(wasT , 3 , 4)) 'save return value for BLX
 							EndIf
@@ -973,7 +973,7 @@ mul64:
 						Exit Sub ' instruccion OK, salimos 
 					
 					case 5 'enhanced DSP adds\subtracts
-						if (instr_ And &h00000F00UL) Then print "puta mierda9" : goto invalid_instr
+						if (instr_ And &h00000F00UL) Then print "GOTO invalid_instr 9" : goto invalid_instr
   
 						op1 = cpuPrvGetRegNotPC(cpu, instr_ And &h0F, wasT, specialPC) 'Rm
 						op2 = cpuPrvGetRegNotPC(cpu, (instr_ Shr 16) And &h0F, wasT, specialPC) 'Rn
@@ -1020,7 +1020,7 @@ mul64:
 								EndIf
 							
 							case else 
-								__builtin_unreachable() 
+								'__builtin_unreachable() 
 								res = 0 
 						
                   End Select
@@ -1033,7 +1033,7 @@ mul64:
 						Exit Sub ' instruccion OK, salimos 
 					
 					case 8 to 15 'enhanced DSP multiplies 					
-						if ((instr_ And &h00000090UL) <> &h00000080UL) Then print "puta mierda10" : goto invalid_instr
+						if ((instr_ And &h00000090UL) <> &h00000080UL) Then print "GOTO invalid_instr 10" : goto invalid_instr
 
 						op1 = cpuPrvGetRegNotPC(cpu,  instr_        And &h0F, wasT, specialPC) 			'Rm
 						op2 = cpuPrvGetRegNotPC(cpu, (instr_ Shr 8) And &h0F, wasT, specialPC) 	'Rs
@@ -1071,7 +1071,7 @@ mul64:
 								res = ( clngint(clng(op1)) * clngint(cshort(op2)) ) Shr 16 
 								
 								if (instr_ And &h00000020UL) Then  'SMULWy
-									if (instr_ And &h0000F000UL) Then print "puta mierda11" : goto invalid_instr 
+									if (instr_ And &h0000F000UL) Then print "GOTO invalid_instr 11" : goto invalid_instr 
 								else 'SMLAWy
 									op1 = res
 									op2 = cpuPrvGetRegNotPC(cpu, (instr_ Shr 12) And &h0F, wasT, specialPC) 	'Rn
@@ -1101,7 +1101,7 @@ mul64:
 								cpuPrvSetRegNotPC(cpu, (instr_ Shr 16) And &h0F, res64 Shr 32) 
 								
 							case 3 			'SMULxy
-								if (instr_ And &h0000F000UL) Then  print "puta mierda12" : goto invalid_instr
+								if (instr_ And &h0000F000UL) Then  print "GOTO invalid_instr 12" : goto invalid_instr
 								if (instr_ And &h00000020UL) Then 
 									op1 Shr = 16 
 								else
@@ -1120,7 +1120,7 @@ mul64:
 						Exit Sub ' instruccion OK, salimos 
 						
 					case else 
-						print "puta mierda13" : goto invalid_instr 
+						print "GOTO invalid_instr 13" : goto invalid_instr 
             End Select
 			EndIf
 
@@ -1196,7 +1196,7 @@ data_processing:
 					EndIf
 				
 				case 8 			'TST
-					if (setFlags=0) Then print "puta mierda14" : goto invalid_instr
+					if (setFlags=0) Then print "GOTO invalid_instr 14" : goto invalid_instr
 					op1 = cpuPrvGetReg(cpu, (instr_ Shr 16) And &h0F, wasT, specialPC) 
 					res = op1 And op2 
 					goto dp_flag_set 
@@ -1211,7 +1211,7 @@ data_processing:
 					goto dp_flag_set 
 				
 				case 10 		'CMP
-					if (setFlags=0) Then  print "puta mierda15" : goto invalid_instr
+					if (setFlags=0) Then  print "GOTO invalid_instr 15" : goto invalid_instr
 					op1 = cpuPrvGetReg(cpu, (instr_ Shr 16) And &h0F, wasT, specialPC) 
 					res = op1 - op2 
 					cpu->V = cpuPrvSignedSubtractionOverflows(op1, op2, res) 
@@ -1244,7 +1244,7 @@ data_processing:
 					res = INV( op2 )
 				
 				case else 
-					__builtin_unreachable() 
+					'__builtin_unreachable() 
 					res = 0 
 		
 			End Select
@@ -1272,13 +1272,13 @@ dp_flag_set:
 		
 		case 6 , 7 		'load\store reg offset
 			if (instr_ And &h00000010UL) Then  'media and undefined instrs
-				print "puta mierda16" : goto invalid_instr
+				print "GOTO invalid_instr 16" : goto invalid_instr
 			EndIf
   
 load_store_mode_2:
 	 
 			mode = cpuPrvArmAdrMode_2(cpu, instr_, @addBefore, @addAfter, wasT, specialPC) 
-			if (mode And ARM_MODE_2_INV) Then print "puta mierda17" : goto invalid_instr
+			if (mode And ARM_MODE_2_INV) Then print "GOTO invalid_instr 17" : goto invalid_instr
 			if (mode And ARM_MODE_2_T)   Then privileged = false
 
 			ea = cpuPrvGetReg(cpu, mode And ARM_MODE_2_REG, wasT, specialPC) 
@@ -1351,7 +1351,7 @@ load_store_mode_2:
 				'if this is a store, get the value to store
 				if (isLoad=0) Then 
 					memVal32 =  cpuPrvGetReg(cpu, regNo, wasT, specialPC) 
-					if unlikely(userModeRegs) Then 
+					if (userModeRegs) Then 
 						if (regNo >= 8) AndAlso (regNo <= 12) AndAlso (cpu->M = ARM_SR_MODE_FIQ) Then 	'handle fiq\usr banked regs
 							memVal32 = cpu->extra_regs(regNo - 8) 
 						ElseIf (regNo = REG_NO_SP) Then
@@ -1382,7 +1382,7 @@ load_store_mode_2:
 				
 				'if this is a load, store the value we just loaded
 				if (isLoad) Then 
-					if unlikely(userModeRegs) Then 
+					if (userModeRegs) Then 
 						if (regNo >= 8) AndAlso (regNo <= 12) AndAlso (cpu->M = ARM_SR_MODE_FIQ) Then   	'handle fiq\usr banked regs
 							cpu->extra_regs(regNo - 8) = memVal32 
 							continue for
@@ -1395,7 +1395,7 @@ load_store_mode_2:
 						EndIf
 					EndIf
 
-					if unlikely(iif((regNo = REG_NO_PC) AndAlso (copySPSR<>0),1,0)) Then
+					if (regNo = REG_NO_PC) AndAlso (copySPSR<>0) Then
 						loadedPc = memVal32 
 					else
 						cpuPrvSetReg(cpu, regNo, memVal32)
@@ -1450,11 +1450,11 @@ coproc_mem_2reg:
 			mode = cpuPrvArmAdrMode_5(cpu, instr_, @addBefore, @addAfter, @memVal8) 
 			if (cpNo >= 14) Then 'cp14 and cp15 are for priviledged users only
 				if (privileged=0) Then 
-					print "puta mierda 18" : goto invalid_instr
+					print "GOTO invalid_instr 18" : goto invalid_instr
 				endif
 			ElseIf (cpu->CPAR And (1UL Shl cpNo))=0 Then
 				'others are access-controlled by CPAR
-				print "puta mierda 19" : goto invalid_instr
+				print "GOTO invalid_instr 19" : goto invalid_instr
 			EndIf
 
 
@@ -1465,7 +1465,7 @@ coproc_mem_2reg:
 					(cpu->coproc(cpNo)->twoRegF(cpu, cpu->coproc(cpNo)->userData, _
 					NOT_NOT(instr_ And &h00100000UL), (instr_ Shr 4) And &h0F, _
 					(instr_ Shr 12) And &h0F, (instr_ Shr 16) And &h0F, instr_ And &h0F) =0) Then
-							print "puta mierda 20 " : goto invalid_instr
+							print "GOTO invalid_instr 20 " : goto invalid_instr
 				endif
 			else
 				'handle LDC\STC
@@ -1474,7 +1474,7 @@ coproc_mem_2reg:
 				   NOT_NOT(instr_ And &h00400000UL), iif((instr_ And &h00100000UL)=0,1,0),_
 				   (instr_ Shr 12) And &h0F, mode And ARM_MODE_5_REG, addBefore, addAfter,_
 				   iif(mode And ARM_MODE_5_IS_OPTION , @memVal8 , NULL)) =0) Then
-							print "puta mierda 21" : goto invalid_instr
+							print "GOTO invalid_instr 21" : goto invalid_instr
 				EndIf
 			EndIf
 			Exit Sub ' instruccion OK, salimos 
@@ -1487,10 +1487,10 @@ coproc_mem_2reg:
 coproc_dp:
 			cpNo = (instr_ Shr 8) And &h0F 
 			if (cpNo >= 14) Then 'cp14 and cp15 are for priviledged users only
-				if (privileged=0) Then goto invalid_instr
+				if (privileged=0) Then print "GOTO invalid_instr 22" : goto invalid_instr
 			ElseIf (cpu->CPAR And (1UL Shl cpNo))=0 Then
 				'others are access-controlled by CPAR
-				goto invalid_instr
+				print "GOTO invalid_instr 23" : goto invalid_instr
 			EndIf
 			
 			if (instr_ And &h00000010UL) Then  
@@ -1500,7 +1500,7 @@ coproc_dp:
 					 NOT_NOT(instr_ And &h00100000UL), (instr_ Shr 21) And &h07, _
 					(instr_ Shr 12) And &h0F, (instr_ Shr 16) And &h0F, _
 					 instr_ And &h0F, (instr_ Shr 5) And &h07) =0) Then 
-							goto invalid_instr
+							print "GOTO invalid_instr 24" : goto invalid_instr
 				endif
 			else
 				'CDP
@@ -1508,7 +1508,7 @@ coproc_dp:
 					(cpu->coproc(cpNo)->dataProcessing(cpu, cpu->coproc(cpNo)->userData, specialinstr, _
 					(instr_ Shr 20) And &h0F, (instr_ Shr 12) And &h0F, (instr_ Shr 16) And &h0F, _
 					 instr_ And &h0F, (instr_ Shr 5) And &h07) =0) Then 
-							print "puta mierda 25" : goto invalid_instr
+							print "GOTO invalid_instr 25" : goto invalid_instr
 				endif
 			EndIf
 			Exit Sub ' instruccion OK, salimos 
@@ -1546,7 +1546,7 @@ coproc_dp:
 
 invalid_instr:
 
-	printf(!"Invalid instr_ 0x%08lx seen at 0x%08lx with CPSR 0x%08lx\n", instr_, cpu->curInstrPC, cpuPrvMaterializeCPSR(cpu) ) 
+	print "Invalid instr_ 0x";hex(instr_,8);" seen at 0x";hex(cpu->curInstrPC,8);" with CPSR 0x";hex(cpuPrvMaterializeCPSR(cpu),8)
 	cpuPrvException(cpu, cpu->vectorBase + ARM_VECTOR_OFFT_UND, cpu->curInstrPC + iif(wasT , 2 , 4), ARM_SR_MODE_UND Or ARM_SR_I) 
    'print "esperando tu respuesta.....":sleep
 
@@ -1908,9 +1908,9 @@ End Function
 
 
 Sub cpuCycle( cpu As ArmCpu Ptr) 
-	if unlikely(IIF((cpu->waitingFiqs<>0) AndAlso (cpu->F=0),1,0)) Then 
+	if (cpu->waitingFiqs<>0) AndAlso (cpu->F=0) Then 
 		cpuPrvException(cpu, cpu->vectorBase + ARM_VECTOR_OFFT_FIQ, cpu->regs(REG_NO_PC) + 4, ARM_SR_MODE_FIQ Or ARM_SR_I Or ARM_SR_F) 
-	ElseIf unlikely(IIF((cpu->waitingIrqs<>0) AndAlso (cpu->I=0),1,0)) Then
+	ElseIf (cpu->waitingIrqs<>0) AndAlso (cpu->I=0) Then
 		cpuPrvException(cpu, cpu->vectorBase + ARM_VECTOR_OFFT_IRQ, cpu->regs(REG_NO_PC) + 4, ARM_SR_MODE_IRQ Or ARM_SR_I)
 	EndIf
 	

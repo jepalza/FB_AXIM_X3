@@ -46,7 +46,7 @@ Function cp15prvCoprocRegXferFunc(cpu As ArmCpu Ptr , userData As Any Ptr , two 
 				
 					tmp = valor Xor cp15->control_ 		'see what changed and mask off then chack for what we support changing of
 					if (tmp And &h84F0UL) Then 
-						printf(!"cp15: unknown bits changed (0x%08lx) 0x%08lx -> 0x%08lx, halting\n", (tmp And &h84F0UL), cp15->control_, origvalor) 
+						print "cp15: unknown bits changed (0x";hex((tmp And &h84F0UL),8);") 0x";hex(cp15->control_,8);" -> 0x";hex(origvalor,8);", halting"
 						beep : sleep
 					EndIf
 
@@ -170,9 +170,9 @@ Function cp15prvCoprocRegXferFunc(cpu As ArmCpu Ptr , userData As Any Ptr , two 
 		
 		case 9 		'cache lockdown
 			if (CRm = 1) AndAlso (op2 = 0) Then 
-				printf(!"Attempt to lock 0x%08lx+32 in icache\n", valor) 
+				print "Attempt to lock 0x";hex(valor,8);"lx+32 in icache"
 			ElseIf (CRm = 2) AndAlso (op2 = 0) Then
-				printf(!"Dcache now %s lock mode\n", iif(valor , "in" , "out of") ) 
+				print "Dcache now ";iif(valor , "in" , "out of");" lock mode"
 			else
 				exit select
 			EndIf

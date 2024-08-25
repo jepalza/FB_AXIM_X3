@@ -115,7 +115,7 @@ Function pxaKpcPrvMemAccessF( userData As Any Ptr , pa As ULong , size As Ubyte 
 	Dim As ULong valor = 0 
 	
 	if (size <> 4) OrElse ((pa And 7)<>0) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write" , "read"), size, pa) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return false 
 	EndIf
   
@@ -259,7 +259,7 @@ Sub pxaKpcDirectKeyChange(kpc As PxaKpc Ptr , keyIdx As Ubyte , isDown As Bool)
 	if (keyIdx >= 8) Then PERR("only eight direct keys exist")
 
 	if (kpc->kpc And 2)=0 Then 
-		printf(!"setting direct keys when direct keypad is disabled")
+		Miprint "setting direct keys when direct keypad is disabled"
 	EndIf
 	
 	' revisar

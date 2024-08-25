@@ -117,7 +117,7 @@ Function socAC97PrvMemAccessF( userData As any Ptr , pa As ULong , size As UByte
 	pa -= PXA_AC97_BASE 
 	
 	if (size <> 4) AndAlso (size <> 2) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write" , "read"), size, pa) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return false 
 	EndIf
   

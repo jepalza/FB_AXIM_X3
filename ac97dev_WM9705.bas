@@ -29,8 +29,8 @@ Function wm9705_prvCodecRegR(userData As Any Ptr , regAddr As ULong , regValP As
    dim As WM9705 ptr wm = cast(WM9705 ptr,userData) 
 	Dim As UShort valor 
 	
-	' retirado , salen muchos 
-	printf(!"codec read [0x%04x]\n", regAddr) 
+	' ojo , salen muchos textos y se llena la pantalla
+	print "codec read [0x";hex(regAddr,4);"]"
 	
 	Select Case As Const  (which)  
 		case RESET_
@@ -107,8 +107,8 @@ Function wm9705_prvCodecRegW(userData As Any Ptr , regAddr As ULong , valor As U
 	Dim as WM9705REG which = cast(WM9705REG,regAddr) ' no se usa aun, al no estar implementado
 	dim As WM9705 ptr wm = cast(WM9705 ptr,userData)
 	
-	' retirado , salen muchos 
-	printf(!"codec wri 0x%04x -> [0x%04x]\n", valor, regAddr) 
+	' ojo , salen muchos textos y se llena la pantalla
+	print "codec write 0x";hex(valor,4);" -> [0x";hex(regAddr,4);"]"
 		
 	Select Case As Const (regAddr)  
 		case VOLMASTER ,_
@@ -260,7 +260,7 @@ Function wm9705_prvGetSample(wm As WM9705 Ptr , which As WM9705sampleIdx) As Ush
 
 	ret Or= cUShort(which) Shl 12 
 	
-	'printf(!"%d -> 0x%04x\n", which, ret);
+	'print which;" -> 0x";hex(ret,4)
 	
 	return ret 
 End Function
@@ -319,7 +319,7 @@ Function wm9705_prvHaveModemOutSample(wm As WM9705 Ptr , sampP As ULong Ptr) As 
 	
 	'provide ret valor (not necessarily in the slot)
 	if (wm->digiRegs(0) And &h08) Then 
-		'printf(!"touch reply 0x%04x (slot)\n", retvalor);
+		'print "touch reply 0x";hex(retvalor,4);" (slot)"
 		*sampP = retvalor 
 		return true 
 	EndIf

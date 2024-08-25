@@ -2,7 +2,7 @@
 ' Conversion FREEBASIC (www.freebasic.net) por Joseba Epalza, 2024 <jepalza arroba gmail.com>
 
 
-#cmdline "-gen gcc" 
+#cmdline "-gen gcc"
 ' -fpmode fast -fpu sse"
 ' -g -Wc -gstabs+ para depurar
 ' con -O 2 da error
@@ -14,18 +14,16 @@
 
 
 ' prefiero asi las boleanas
-'#undef Bool
-'  #define Bool UByte
-'#undef TRUE
-'  #define TRUE 1
-'#undef FALSE
-'  #define FALSE 0
+#undef Bool
+  #define Bool UByte
+#undef TRUE
+  #define TRUE 1
+#undef FALSE
+  #define FALSE 0
 
-'#include "crt\math.bi" ' ceil(), floor(), M_PI, pow(), fabs(), sqrt(), etc
-#Include "crt\stdio.bi" ' printf(), scanf(), fopen(), etc
-'#Include "crt\stdlib.bi" ' allocate,calloc(), etc
-'#Include "crt\mem.bi" ' memset(var,val,size) -> variable ptr, valor, tamano usar sizeof(variable))
-'#Include "crt\string.bi" ' memcpy(dest ptr,orig ptr,long)
+
+' printf(), scanf(), fopen(), etc
+#Include "crt\stdio.bi" 
 
 
 #include "vars.bi"
@@ -107,78 +105,61 @@ End Function
 
 
 
-'Sub usage( self As string)
-'	Print "USAGE: EXE {-r ROMFILE.bin | --x} [-g gdbPort] [-s SDCARD_IMG.bin] [-n NAND.bin]"
-'	Sleep 
-'	end 
-'End Sub
-
 
 
 
 
  '------------------------ MAIN --------------------------
 	'screen 18
-
-	dim as uLong romLen = 0, sdSecs = 0 
-	'Dim As Byte ptr self '= argv(0) 
-	'dim As Bool noRomMode = false 
-	dim as FILE ptr nandFile = NULL 
-	dim as FILE ptr romFile = NULL 
-	dim as uByte ptr rom = NULL 
-	Dim As long gdbPort = -1 
-	'dim as ULongInt sdSize 
-	dim as SoC_T ptr soc
-	'Dim As long c 
 	
-#if 0
-	while 1 '((c = getopt(argc, argv, "g:s:r:n:hx")) != -1) switch (c) {
-		case "g" 	'gdb port
-			gdbPort = IIf(optarg , atoi(optarg) ,-1) 
-			if (gdbPort < 1024) OrElse (gdbPort > 65535) Then usage(self)
-		
-		case "s" 	'sd card
-			if optarg Then mSdCard = fopen(optarg, "r+b")
-			if mSdCard=0 Then usage(self)
+   ' necesario solo por compatibilidad, NO se emplea, se ha eliminado todo lo relacionado con DEBUG
+	' eliminar esta variable requiere ir rutina por rutina quitando el parametro que lo emplea
+	dim as long gdbPort =0 ' depuracion, eliminada
 
+	dim as uByte ptr rom = NULL
+	dim as SoC_T ptr soc = null
+
+	dim as uLong romLen = 0 
+	dim as uLong sdSecs = 0 
+	dim as ULongInt sdSize
+
+	dim as FILE ptr romFile  = NULL 
+	dim as FILE ptr nandFile = NULL  
+ 
+	Dim as String FICHERO_ROM="..\NOR_AximX3\AximX3.NOR.bin"	
+	Dim as String FICHERO_SDCARD="" '..\NOR_AximX3\sdcard.img" 'no probado aun, de hecho, falla....
+	Dim as String FICHERO_NAND="" ' no comprobado aun, dado que es para "otras" CPU, no para AXIM-X3
+	
+		' ** ROM **
+		if FICHERO_ROM<>"" then
+			romFile = fopen(FICHERO_ROM, "rb")
+		endif
+		
+		' ** NAND **
+		if FICHERO_NAND<>"" then
+			nandFile = fopen(FICHERO_NAND, "r+b")
+		endif
+	
+		' ** SD-CARD **
+		if FICHERO_SDCARD<>"" then
+			mSdCard = fopen(FICHERO_SDCARD, "r+b")
 			fseek(mSdCard, 0, SEEK_END) 
 			sdSize = ftell(mSdCard) 
 			if (sdSize mod SD_SECTOR_SIZE) Then 
-				printf(!"SD card image not a multiple of %u bytes\n", SD_SECTOR_SIZE) 
+				print "SD card image not a multiple of ";SD_SECTOR_SIZE;" bytes"
 				Sleep : End 
 			EndIf
   
 			sdSize \= SD_SECTOR_SIZE 
 			if (sdSize Shr 32) Then 
-				'printf(!"SD card too big: %llu sectors\n", (unsigned long long)sdSize);
-				' jepalza, el anterior da advertencia en windows, pero en linux he leido que no
-				' de todos modos, este cambio mio, podria no ser correcto.... ojito pues.
-				printf(!"SD card too big: %lu sectors\n", (unsigned long)sdSize) 
+				print "SD card too big: ";sdSize;" sectors"
 				Sleep : End 
 			EndIf
   
 			sdSecs = sdSize 
-			printf(!"opened %lu-sector sd card image\n", (long)sdSecs) 
+			print "opened ";sdSecs;"-sector sd card image" 
+		endif
 		
-		case "r" 	'ROM
-			if (optarg) Then romFile = fopen(optarg, "rb")
-		
-		case "x" 	'NO_ROM mode
-			noRomMode = true 
-		
-		case "n" 	'NAND
-			if (optarg) Then nandFile = fopen(optarg, "r+b")
-		
-		Case Else 
-			usage(self) 
-   Wend
-#endif
-	
-	romFile = fopen("..\NOR_AximX3\AximX3.NOR.bin", "rb")
-	'if ((romFile<>0) AndAlso (noRomMode<>0)) OrElse ((romFile<>0) AndAlso (noRomMode=0)) Then 
-		'usage(self)
-	'EndIf
-  
 	
 	if (romFile) Then 
 		fseek(romFile, 0, SEEK_END) 
@@ -215,8 +196,10 @@ End Function
 		for f as integer=0 to 31
 			'print hex(pp[f],2);" ";
 		next
-		print	
+	print	
+		
 	print "Maquina SOC PXA270 inicializada. Ejecutamos CPU"
+	
 	socRun(soc) 
 	beep
 	MiPrint "fin" 

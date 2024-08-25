@@ -46,7 +46,7 @@ Sub pxaMmcPrvDataXferNextBlockRead(mmc As PxaMmc Ptr)
 	Dim As SdDataReplyType ret 
 	
 	if (mmc->dataXferOngoing=0) Then 
-		printf(!"Cannot read block if no xfer ongoing\n") 
+		miprint "Cannot read block if no xfer ongoing"
 		return 
 	EndIf
 
@@ -70,7 +70,7 @@ Sub pxaMmcPrvDataXferStart(mmc As PxaMmc Ptr)
 	mmc->dataXferOngoing = true 
 	
 	if (mmc->blkLen=0) OrElse (mmc->numBlks=0) Then 
-		printf(!"MMC xfer cannot start with zero length (%u B x %u)\n", mmc->blkLen, mmc->numBlks) 
+		print "MMC xfer cannot start with zero length (";mmc->blkLen;" B x ";mmc->numBlks;")"
 		return 
 	EndIf
 	
@@ -166,7 +166,7 @@ Function mmcSendCommand(mmc As PxaMmc Ptr) As Bool
 			if ((mmc->cmdat And 3) = 0) Then  'no reply as expected
 				success = true 
 			else
-				printf(!"Got no reply, when %u bits were expected\n", iif((mmc->cmdat And 3) = 2 , 136 , 48) )
+				print "Got no reply, when ";iif((mmc->cmdat And 3) = 2 , 136 , 48);" bits were expected"
 			EndIf
 		
 		case SdReply48bits , SdReply48bitsAndBusy
@@ -176,7 +176,7 @@ Function mmcSendCommand(mmc As PxaMmc Ptr) As Bool
 				success = true 
 				doCrcCheck = iif(mmc->cmdat And 2,1,0)
 			else
-				printf(!"Got a 48-bit reply with, when %u bits were expected\n", iif((mmc->cmdat And 3) = 2 , 136 , 0) )
+				print "Got a 48-bit reply with, when ";iif((mmc->cmdat And 3) = 2 , 136 , 0);" bits were expected"
 			EndIf
 		
 		case SdReply136bits 
@@ -184,7 +184,7 @@ Function mmcSendCommand(mmc As PxaMmc Ptr) As Bool
 			if ((mmc->cmdat And 3) = 2) Then  '136-bit reply as expected
 				success = true 
 			else
-				printf(!"Got a 136-bit reply reply, when %u bits were expected\n", iif((mmc->cmdat And 3) = 2 , 48 , 0) )
+				print "Got a 136-bit reply reply, when ";iif((mmc->cmdat And 3) = 2 , 48 , 0);" bits were expected"
 			EndIf
    End Select
 
@@ -223,7 +223,7 @@ Function pxaMmcPrvMemAccessF( userData As Any Ptr , pa As ULong , size As Ubyte 
 	Dim As Bool ret = true 
 	
 	if(size <> 4) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write" , "read"), size, culng(pa) ) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return false 
 	EndIf
   

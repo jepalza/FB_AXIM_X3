@@ -7,7 +7,7 @@ Function pxaMemCtrlrPrvClockMgrMemAccessF( userData As Any Ptr , pa As uLong , s
 	dim as uLong valor = 0 
 	
 	if (size <> 4) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write_" , "read_"), size, pa) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return false 		'we do not support non-word accesses
 	EndIf
   
@@ -15,7 +15,7 @@ Function pxaMemCtrlrPrvClockMgrMemAccessF( userData As Any Ptr , pa As uLong , s
 
 	if (write_) Then 
 		valor = *cast(uLong ptr,buf)
-		printf(!" MEM: 0x%08x -> [0x%08x]\n", valor, pa * 4 + PXA_MEM_CONTROLLER_BASE) 
+		print " MEM: 0x";hex(valor,8);" -> [0x";hex(pa * 4 + PXA_MEM_CONTROLLER_BASE,8);"]"
 	EndIf
   
 	Select Case As Const (pa)  

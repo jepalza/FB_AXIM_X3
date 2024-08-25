@@ -55,7 +55,7 @@ Function socGpioPrvMemAccessF( userData As Any Ptr , pa As ULong , size As Ubyte
 	
 	if (write_) Then 
 		if (size <> 4) Then 
-			printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write" , "read"), size, pa) 
+			Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 			return false 		'we do not support non-word accesses
 		EndIf
   

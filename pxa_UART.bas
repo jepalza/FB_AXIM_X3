@@ -48,7 +48,7 @@
 #define UART_LCR_WLS_5		&h00	'5 bit words
 
 #define UART_LSR_FIFOE		&h80	'fifo contails an error (framing, parity, or break)
-#define UART_LSR_TEMT		&h40	'tranmitter empty (shift reg is empty and no more byte sin fifo\no byte in holding reg)
+#define UART_LSR_TEMT		&h40	'tranmitter empty (shift reg is empty and no more bytes in fifo or no byte in holding reg)
 #define UART_LSR_TDRQ		&h20	'transmitter data request (see docs)
 #define UART_LSR_BI			&h10	'send when char at front of fifo (or in holding reg) was a break char (chr reads as zero by itself)
 #define UART_LSR_FE			&h08	'same as above, but for framing errors
@@ -201,7 +201,7 @@ Function socUartPrvMemAccessF( userData As Any Ptr , pa As ULong , size As Ubyte
 	Dim As Ubyte t, valor = 0 
 
 	if (size <> 4) AndAlso (size <> 1) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write" , "read"), size, culng(pa) ) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return true 
 	EndIf
 	

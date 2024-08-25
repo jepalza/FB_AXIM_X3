@@ -86,7 +86,7 @@ Sub socI2cPrvCrW( i2c As SocI2c Ptr , valor As uLong)
 			if (i2c->isr And &h80) Then MiPrint "i2c: recving into full buffer"
 			i2c->db = socI2cPrvAction(i2c, i2cRx, iif((i2c->icr And 4)=0,1,0) ) 
 			i2c->isr Or= &h80 
-			'record ack\nak we sent
+			'record ack \ nak we sent
 			i2c->isr And= INV( 2 )
 			if (i2c->icr And 4) Then i2c->isr Or= 2
 		EndIf
@@ -114,7 +114,7 @@ Function socI2cPrvMemAccessF( userData As Any Ptr , pa As uLong , size As UByte 
 	dim as uLong valor 
 	
 	if (size <> 4) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write_" , "read_"), size, pa) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return false 
 	EndIf
   

@@ -61,7 +61,7 @@ Sub keypadPrvMatrixRecalc( kp As Keypad Ptr)
 				Dim As Bool colHi  = iif(colSta = SocGpioStateHigh,1,0) 
 				
 				if (haveStrong<>0) AndAlso (iif(rowState=0,1,0) <> iif(colHi=0,1,0)) Then
-					printf(!"row %u (%u) being pulled in different directions\n", i, kp->kpGpioRow(i))
+					print "row ";i;" (";kp->kpGpioRow(i);") being pulled in different directions"
 				EndIf
   
 				haveStrong = true 
@@ -91,7 +91,7 @@ Sub keypadPrvMatrixRecalc( kp As Keypad Ptr)
 				Dim As Bool rowHi = iif( rowSta = SocGpioStateHigh,1,0) 
 
 				if (haveStrong<>0) AndAlso (iif(rowHi<>0,1,0) <> iif(colState=0,1,0)) Then ' revisar
-					printf(!"col %u (%u) being pulled in different directions\n", j, kp->kpGpioCol(j))
+					print "col ";i;" (";kp->kpGpioCol(i);") being pulled in different directions"
 				EndIf
   
 				haveStrong = true 

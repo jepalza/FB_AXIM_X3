@@ -59,7 +59,7 @@ Function memAccess( mem As ArmMem Ptr , addr As ULong , size As UByte , accessTy
    Next
 
 	if (ret=0) AndAlso ((accessType And MEM_ACCCESS_FLAG_NOERROR)=0) Then 
-		printf(!"Memory %s of %u bytes to PA 0x%08lx fails\n", iif(wantWrite , "write" , "read"), size, addr) 
+		Print "Memory ";iif(wantWrite , "WRITE" , "READ");" of ";size;" bytes to PA &h";hex(addr,8);" Fails"
 		beep : sleep 'make debugging easier
    EndIf
 

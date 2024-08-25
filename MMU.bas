@@ -324,9 +324,9 @@ Sub mmuPrvDumpUpdate(va As ULong , pa As ULong , len_ As ULong , dom As UByte , 
 				  (c <> wasC) OrElse (b <> wasB) OrElse (expectPa <> pa) Then 
 		'not a continuation of what we´ve been at...
 		if (wasValid) Then 
-			printf(!"0x%08lx - 0x%08lx -> 0x%08lx - 0x%08lx don%u ap%u %c %c\n",_
-				startVa, va_end, startPa, (startPa + (va_end - startVa)),_
-				wasDom, wasAp, iif(wasC , "c" , " "), iif(wasB , "b" , " "))
+			Print _
+				"0x";hex(startVa,8);" - 0x";hex(va_end,8);" -> 0x";hex(startPa,8);" - 0x";hex(startPa + (va_end - startVa),8);_
+				"don";wasDom;" ap";wasAp;" ";iif(wasC , "c" , " ");" ";iif(wasB , "b" , " ")
 		EndIf
 		
 		wasValid = valid 

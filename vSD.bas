@@ -63,11 +63,11 @@ End Function
 Function vsdRejectCmd(vsd As _VSD2 Ptr , cmd As UByte , param As ULong ,  reply As UByte Ptr , why As RejectReason_enum , wasAcmd As Bool) As SdReplyType
 	Dim As ULong r1orr = 1UL Shl 19 	'generic error
 	
-	printf(!"Rejecting %sCMD%u(0x%08lx)\n", iif(wasAcmd , "A" , ""), cmd, culng(param) ) 
+	print "Rejecting ";iif(wasAcmd , "A" , "");"CMD";trim(str(cmd));"(0x";hex(culng(param),8);")"
 	
 	Select Case As Const (why)  
 		case InvalidInCurrentState 
-			printf(!" -> invalid in current state %u\n", vsd->state) 
+			print " -> invalid in current state ";vsd->state 
 			r1orr = 1UL Shl 22 
 		
 		case UnacceptableParam 
@@ -473,7 +473,7 @@ Function vsdDataXferBlockToCard(vsd As _VSD2 Ptr , datas As Any Ptr , blockSz As
   
 	if (vsd->bufIsData) Then 
 		if (vsd->secW(vsd->curSec, datas)=0) Then 
-			printf(!"failed to write SD backing store sec %lu\n", vsd->curSec )
+			print "failed to write SD backing store sec ";vsd->curSec
 			return SdDataErrBackingStore 
 		EndIf
   
@@ -509,7 +509,7 @@ Function vsdDataXferBlockFromCard(vsd As _VSD2 Ptr , datas As Any Ptr , blockSz 
 	
 	if (vsd->bufIsData) Then 
 		if (vsd->secR(vsd->curSec, datas)=0) Then 
-			printf(!"failed to read SD backing store sec %lu\n", culng(vsd->curSec) )
+			print "failed to read SD backing store sec ";culng(vsd->curSec)
 			return SdDataErrBackingStore 
 		EndIf
 		vsd->numBlocksExpected-=1 ' debe ir aqui, antes de la comparacion que sigue

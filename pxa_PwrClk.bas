@@ -29,7 +29,7 @@ Function pxaPwrClkPrvCoproc14regXferFunc(cpu As ArmCpu Ptr , userData As Any Ptr
 					valor = 0 
 				else
 					pc->turbo = iif((valor And 1) <> 0 ,1,0)
-					if (valor And 2) Then printf(!"Set speed mode (CCCR + cp14 reg6) to 0x%08lx 0x%08lx\n", pc->CCCR, valor)
+					if (valor And 2) Then print "Set speed mode (CCCR + cp14 reg6) to 0x";hex(pc->CCCR,8);" 0x";hex(valor,8)
 				EndIf
 				goto success 
 			
@@ -46,7 +46,7 @@ Function pxaPwrClkPrvCoproc14regXferFunc(cpu As ArmCpu Ptr , userData As Any Ptr
 					pc->RCSR Or= 4 
 					cpuReset(pc->cpu, 0) 
 				ElseIf (op2 = 0) Then
-					printf(!"Someone tried to set processor power mode (cp14 reg7) to 0x%08lx\n", valor) 
+					print "Someone tried to set processor power mode (cp14 reg7) to 0x";hex(valor,8) 
 				EndIf
 				goto success 
 			
@@ -74,7 +74,7 @@ Function pxaPwrClkPrvClockMgrMemAccessF( userData As Any Ptr , pa As ULong , siz
 	Dim As ULong valor = 0 
 	
 	if (size <> 4) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write" , "read"), size, pa) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return false 
 	EndIf
   
@@ -115,7 +115,7 @@ Function pxaPwrClkPrvPowerMgrMemAccessF( userData As Any Ptr , pa As ULong , siz
 	Dim As ULong valor = 0 
 	
 	if (size <> 4) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write" , "read"), size, pa) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return false 
 	EndIf
   

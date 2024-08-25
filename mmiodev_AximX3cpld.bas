@@ -9,14 +9,14 @@ Function aximX3cpldPrvMemAccessF( userData As Any Ptr , pa As ULong , size As Ub
 	pa -= AXIM_X3_CPLD_BASE 
 	
 	if(size <> 4) OrElse (write_=0) OrElse (pa<>0) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write" , "read"), size, pa) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return false 
 	EndIf
 	
 	valor = *cast(ULong ptr,buf)
 	
 	if (cpld->valor <> valor) Then 
-		printf(!" * CPLD 0x%08lx -> 0x%08lx\n", cpld->valor, valor)
+		print " * CPLD 0x";hex(cpld->valor,8);" -> 0x";hex(valor,8)
 	EndIf
   
 	cpld->valor = valor 

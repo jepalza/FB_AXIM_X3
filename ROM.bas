@@ -45,7 +45,7 @@ Function romPrvErase(rom As ArmRom Ptr , ofst As ULong) As Bool
 	ofst \= sz 
 	ofst *= sz 
 	
-	printf(!"SF erase at 0x%08x\n", ofst) 
+	print "SF erase at 0x";hex(ofst,8)
 	
 	while (piece<>0) AndAlso (piece->size <= ofst)  
 		ofst -= piece->size 
@@ -136,7 +136,7 @@ Function romAccessF( userData As Any Ptr , pa As ULong , size As Ubyte , write_ 
 			if (diffData) Then return false
 			if (dataBits = &h03) Then   	'set read config reg
 				if (rom->possibleConfigReg <> addrBits) Then
-					printf(!"Strataflash READ CONFIG REG SECOND CYCLE SAID 0x%04x, first was 0x%04x!\n", addrBits, rom->possibleConfigReg) 
+					print "Strataflash READ CONFIG REG SECOND CYCLE SAID 0x";hex(addrBits,8);", first was 0x";hex(rom->possibleConfigReg,4);"!"
 					return false 
 				EndIf
 				rom->configReg = addrBits 
@@ -157,7 +157,7 @@ Function romAccessF( userData As Any Ptr , pa As ULong , size As Ubyte , write_ 
 			rom->mode = StrataFlashReadStatus 
 			return true 
 		ElseIf (diffData) Then 
-			printf(!"strataflash: ignoring write of 0x%08x -> [0x%08x]\n", dataBits, fromStart) 
+			print "strataflash: ignoring write of 0x";hex(dataBits,8);" -> [0x";hex(fromStart,8);"]"
 			return true 
 		else
         Select Case As Const (dataBits And &hff)  
@@ -223,7 +223,7 @@ Function romAccessF( userData As Any Ptr , pa As ULong , size As Ubyte , write_ 
 				return true 
 			
 			case else 
-				printf(!"Unknown strataflash command 0x%04x -> [0x%08x]\n", dataBits, addrBits) 
+				print "Unknown strataflash command 0x";hex(dataBits,4);" -> [0x";hex(addrBits,8);"]"
 				return false 
         End Select
 		EndIf
@@ -335,20 +335,20 @@ Function romAccessF( userData As Any Ptr , pa As ULong , size As Ubyte , write_ 
 							
 							Select Case As Const (fromStart)  
 								case 0 		'id?
-									'printf(!"strataflash weird read of 0x%08x in ID mode returns 0x%04x\n", fromStart , reply) 
+									'print "strataflash weird read of 0x";hex(fromStart,8);" in ID mode returns 0x";hex(reply,4)
 									reply = &h89 
 									
 								case 2 		'block lock\lockdown
 									reply = 0 
 
 								case else 
-									'printf(!"strataflash unknown read of 0x%08x in ID mode returns 0xffff\n", fromStart) 
+									'print "strataflash unknown read of 0x";hex(fromStart,8);" in ID mode returns 0xffff"
 									reply = &hffff 
                      End Select
                End Select
 				
 				case StrataFlashReadCFI 
-					'printf(!"CFI Read 0x%08x\n", fromStart) 
+					'print "CFI Read 0x";hex(fromStart,8)
 					Select Case As Const (fromStart)  
 						case &h00 
 							reply = &h0089 
@@ -369,7 +369,7 @@ Function romAccessF( userData As Any Ptr , pa As ULong , size As Ubyte , write_ 
                      End Select
                End Select
 
-					'printf(!"CFI Read 0x%08x -> 0x%04x\n", fromStart, reply) 
+					'print "CFI Read 0x";hex(fromStart,8);" -> 0x";hex(reply,4) 
 				
 				case else 
 					return false 

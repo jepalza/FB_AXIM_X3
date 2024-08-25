@@ -174,7 +174,7 @@ Function nandWrite(nand As NAND_T Ptr , cle As Bool , ale As Bool , valor As UBy
 				nand->addrBytesRxed = 0 
 			
 			case else 
-				printf(!"unknown command 0x%02x. halt.\n", valor) 
+				print "HALT: unknown command 0x";hex(valor,2)
 				beep : sleep
 
       End Select
@@ -380,11 +380,11 @@ Function nandInit( nandFile As FILE Ptr , specs As NandSpecs Ptr , readyCbk As N
 	if (nandFile) Then   
 		t = fread(nand->datas, 1, nandSz, nandFile) 
 		if (nandSz <> t) Then
-			printf(!"Cannot read nand. got %lu, wanted %lu\n", t, nandSz) 
+			print "Cannot read NAND. Got ";t;", wanted";nandSz 
 			free(nand) 
 			return NULL 
 		else
-			printf(!"read %u bytes of nand\n", nandSz)
+			print "read ";nandSz;" bytes of NAND"
 		EndIf
 	ElseIf (nandFile=0) Then 
 		memset(nand->datas, &hff, nandSz)

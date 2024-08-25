@@ -8,9 +8,9 @@
 ' https:\\gcc.gnu.org\onlinedocs\gcc\Integer-Overflow-Builtins.html
 
 Extern "C"
-  Declare Sub __builtin_unreachable() ' este es necesario? diria que no, es para compilar solo....
+  'Declare Sub __builtin_unreachable() ' este es necesario? diria que no, es para compilar solo....
 	
-  'Declare Function __builtin_expect(Byval n As Long) As Long
+  'Declare Function __builtin_expect(Byval n As Long) As Long ' idem a la anterior
 	
   Declare Function __builtin_ctzll(Byval n As ulongint) As Long
   Declare Function __builtin_clzl (Byval n As ulong) As Long
@@ -111,12 +111,12 @@ end function
 'sleep
 
 '#define __builtin_unreachable() rem ' print "__builtin_unreachable estudiame":beep
-#define __builtin_expect(x,y) iif((x)=0,0,1)
-#define unlikely(x)	__builtin_expect((x),0)
+'#define __builtin_expect(x,y) iif((x)=0,0,1)
+'#define unlikely(x)	__builtin_expect((x),0)
 
 
 sub MiPrint(cad as string)
-	color 12
+	color 13
 	print cad
 	color 7
 end sub
@@ -135,7 +135,7 @@ end function
 
 function NOT_NOT(aa as Longint) as long
 	'print aa,not(aa):sleep
-	' segun internet y mis pruebas, NOT-NOT es "1" si el valor NO es cero
+	' segun internet y mis pruebas, NOT-NOT es "1" si el valor no es cero
 	return iif(aa,1,0)
 end function
 ' ejemplo de prueba de NOT_NOT (comprobado en C)

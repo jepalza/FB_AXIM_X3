@@ -160,7 +160,8 @@ Function w86l488PrvIndirectAccess(wl As W86L488 Ptr , write_ As Bool , buf As US
 			return false 
    End Select
 
-	printf(!"WL %s i[%02x %10s] == 0x%04lx\n", iif(write_ , "W" , "R"), wl->indAddr, strIndirect(wl->indAddr), culng(valor) )
+	print "WL ";iif(write_ , "W" , "R");" i[";hex(wl->indAddr,2);" ";right(space(10)+strIndirect(wl->indAddr),10);"] == 0x";hex(valor,4)  
+	
 	
 	if (write_=0) Then *buf = valor
 	
@@ -172,19 +173,19 @@ Sub w86l488PrvExecCmd(wl As W86L488 Ptr , cmd As UByte , param As ULong)
 	dim as SdReplyType ret 
 	Dim As UByte reply(16) 
 	
-	printf(!"cmd %u (0x%08lx)\n", cmd, param) 
+	print "cmd ";cmd;" (0x";hex(param,8);")"
 	
 	wl->sta And= INV( &h3000 )
 	
 	if (wl->vsd) Then 
-		printf(!"sending cmd %u (0x%08lx)\n", cmd And &h3f, param) 
+		print "sending cmd ";cmd And &h3f;" (0x";hex(param,8);")" 
 		ret = vsdCommand(wl->vsd, cmd, param, @reply(0)) 
 	else
 		MiPrint "MMC unit has no SD card - command ignored"
 		ret = SdReplyNone 
 	EndIf
   
-	printf(!"SD says %d\n", ret) 
+	print "SD says "; ret 
 	wl->xtdStatus And= INV( &h8000 )	'not waiting for reply anymore
 	wl->xtdStatus And= INV( &h1000 )	'clock not running (cmd process is over)
 	
@@ -230,7 +231,7 @@ End Function
 
 Function w86l488PrvFifoW(wl As W86L488 Ptr , valor As UShort) As Bool
 	'wl()
-	printf(!"FIFO W: 0x%04x\n", valor) 
+	print "FIFO W: 0x";hex(valor,4)
 	
 	return false 
 End Function
@@ -284,7 +285,7 @@ Function w86l488PrvMemAccessF( userData As Any Ptr , pa As ULong , size As Ubyte
 	Dim As ULong valor = 0 
 	
 	if(size <> 2) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write" , "read"), size, pa) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return false 
 	EndIf
 	
@@ -376,8 +377,8 @@ Function w86l488PrvMemAccessF( userData As Any Ptr , pa As ULong , size As Ubyte
 			return false 
    End Select
 
-	printf(!"WL %s d[%02lx %10s] == 0x%04lx\n", iif(write_ , "W" , "R"), pa, strDirect(pa), valor) 
-	
+	print "WL ";iif(write_ , "W" , "R");" d[";hex(pa,2);" ";right(space(10)+strDirect(pa),10);"] == 0x";hex(valor,4)  
+
 	if (write_=0) Then 
 		*(cast(UShort ptr,buf)) = valor
 	EndIf

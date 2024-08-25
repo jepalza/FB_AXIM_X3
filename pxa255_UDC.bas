@@ -7,7 +7,7 @@ Function pxa255UdcPrvMemAccessF( userData As Any Ptr , pa As uLong , size As UBy
 	Dim as uLong valor 
 	
 	if (size <> 4) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write_" , "read_"), size, pa) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8) 
 		return false 
 	EndIf
 	

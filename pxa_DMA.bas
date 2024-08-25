@@ -122,7 +122,7 @@ Function socDmaPrvChannelDoBurst(dma As SocDma Ptr , channel As Ubyte) As Bool		
 
 	if ((num mod each)<>0) Then 
   	   'xfer size not multiple of xfer item sz?
-		printf(!"cannot xfer %u bytes using %u-byte piece. Halting\n", num, each) 
+		print "cannot xfer ";num;" bytes using ";each;" byte piece. Halting"
 		'this should never happen and is unpredictable on real HW. halt to allow debug
 		beep: Sleep
 	EndIf
@@ -313,7 +313,7 @@ Function socDmaPrvMemAccessF( userData As Any Ptr , pa As ULong , size As Ubyte 
 	Dim As ULong valor = 0 
 	
 	if (size <> 4) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR", iif(write_ , "write" , "read"), size, pa ) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8)
 		return false 
 	EndIf
   

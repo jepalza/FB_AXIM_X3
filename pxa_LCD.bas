@@ -17,7 +17,7 @@ Function pxaLcdPrvMemAccessF( userData As Any Ptr , pa As ULong , size As Ubyte 
 	Dim As ULong valor = 0 
 	
 	if (size <> 4) Then 
-		printf(!"%s: Unexpected %s of %u bytes to 0x%08lx\n", "ERROR",iif(write_ , "write" , "read"), size, pa) 
+		Print iif(write_ , "WRITE" , "READ");": Unexpected ERROR of ";size;" bytes to &h";hex(pa,8)
 		return false 		'we do not support non-word accesses
 	EndIf
   
@@ -214,7 +214,7 @@ Sub pxaLcdPrvScreenDataPixel(lcd As PxaLcd Ptr , buf As UByte Ptr)
 		Dim As ULong winH = h 
 		if (lcd->hardGrafArea) Then winH += 3 * w \ 8
 
-		printf(!"SCREEN configured for %u x %u\n", w, h) 
+		print "SCREEN configured for ";w;"x";h 
 		mWindow = SDL_CreateWindow("uARM", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, w, winH, 0) 
 		if (mWindow = NULL) Then 
 			MiPrint "Couldn't create window SDL"

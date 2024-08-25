@@ -68,16 +68,22 @@ Function socInit(romPieces As any ptr Ptr , romPieceSizes As ULong Ptr , romNumP
 			' nada
 	
 		case else 
-			__builtin_unreachable() ' necesario?
+			'__builtin_unreachable() ' necesario?
    End Select
 	
 	' ROM ------------------------	
 	soc->rom = romInit(soc->mem, ROM_BASE, romPieces, romPieceSizes, romNumPieces, deviceGetRomMemType()) 
 	if (soc->rom=0) Then PERR("Cannot init ROM1")
+	
+	' *************************************
+	' desconozco aun el motivo, pero parece un fallo de freebasic:
+	' la variable COPROC() se pierde al salir de la anterior llamada ROMINIT
+	' como ne he localidado el fallo aun, hago una reparacion manual de urgencia
 	print "dir cpu en socinit2: ";hex(soc->cpu->coproc(15),8),hex(soc->cpu->coproc(15)->regXfer,8),hex(soc->cpu->coproc(15)->userdata,8)
 	' guardo las variables que "se van a perder" del COPRO 15
 	dim as ulong ptr regXfer_copia =cast(ulong ptr,soc->cpu->coproc(15)->regXfer)
 	dim as ulong ptr userdata_copia=cast(ulong ptr,soc->cpu->coproc(15)->userdata)
+	' *************************************
 	
 	' IC -------------------------------
 	soc->ic = socIcInit(soc->cpu, soc->mem, socRev) 
@@ -296,7 +302,7 @@ print "dir cpu en socRun  : ";hex(soc->cpu->coproc(15),8),hex(soc->cpu->coproc(1
 						soc->mouseDown = true 
 						deviceTouch(soc->dev, events.button.x, events.button.y,&h0c0) 
 						'jepalza
-						'printf(!"MOUSE push: %d %d %d\n",events.button.x,events.button.y,press) 
+						'print "MOUSE push: ";events.button.x;events.button.y;press
 					
 					case SDL_MOUSEBUTTONUP 
 						if (events.button.button <> SDL_BUTTON_LEFT) Then Exit select
@@ -309,7 +315,7 @@ print "dir cpu en socRun  : ";hex(soc->cpu->coproc(15),8),hex(soc->cpu->coproc(1
 						if (press>32700) Then press=32700 
 						if (soc->mouseDown=0) Then exit select
 						deviceTouch(soc->dev, events.motion.x, events.motion.y,&hc0) 
-						'printf(!"MOUSE move: %d %d %d\n",events.button.x,events.button.y,press) 
+						'print "MOUSE move: ";events.button.x;events.button.y;press) 
 					
 					case SDL_KEYDOWN 
 						deviceKey(soc->dev, events.key.keysym.sym, true) 
